@@ -7,12 +7,13 @@ from chainer import training
 from chainer.training import extensions
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-batchsize = 20
+batchsize = 16
 gpu = -1
 out = 'result'
-epoch = 2
-n_units = 500
+epoch = 1
+n_units = 100
 
 train_src = np.loadtxt('train_source.csv', dtype=np.float32, delimiter=',')
 train_target = np.loadtxt('train_target.csv', dtype=np.float32, delimiter=',')
@@ -70,6 +71,11 @@ pred = model.predict(test_src).data
 
 for d in range(3):
     plt.figure()
-    plt.plot(pred[:,d], 'o', markersize=1)
-    plt.plot(test_target[:,d], 'o', markersize=1)
+    plt.plot(pred[:,d], 'or', label='変換データ', markersize=4, alpha=1)
+    plt.plot(test_target[:,d], 'og', label='正解データ', markersize=2, alpha=1)
+    plt.xlabel('時間 [フレーム]')
+    plt.ylabel('ケプストラム')
+    plt.title('{}次元目のケプストラム'.format(d))
+    plt.legend()
+    plt.savefig(os.path.join(out, 'fig{}'.format(d)))
 plt.show()
